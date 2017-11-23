@@ -1,0 +1,46 @@
+{
+  "name": "gulp-starter",
+  "version": "1.0.0",
+  "description": "gulp脚手架",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp",
+    "rel": "gulp rel",
+    "build": "gulp build"
+  },
+  "author": "HelloSkull",
+  "license": "ISC",
+  "dependencies": {
+    "mescroll.js": "^1.2.3",
+    "text-to-svg": "^3.1.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "browser-sync": "^2.18.8",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-cache": "^1.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^3.2.0",
+    "gulp-less": "^3.3.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-px2rem-plugin2": "^0.4.2",
+    "gulp-rev": "^8.1.0",
+    "gulp-rev-collector": "^1.2.2",
+    "gulp-rev-replace": "^0.4.3",
+    "gulp-sequence": "^0.4.6",
+    "gulp-uglify": "^2.1.2",
+    "imagemin-pngquant": "^5.0.1",
+    "isomorphic-fetch": "^2.2.1",
+    "whatwg-fetch": "^2.0.3"
+  }
+}
