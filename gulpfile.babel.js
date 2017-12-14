@@ -15,7 +15,6 @@ import rev from 'gulp-rev'; // - 对文件名加MD5后缀
 import revCollector from 'gulp-rev-collector'; // - 对文件名加MD5后缀
 import gulpSequence from 'gulp-sequence';
 import autoprefixer from 'gulp-autoprefixer'; //给css3属性添加浏览器前缀，增加兼容性，稳定性
-//移动端
 import px2rem from 'gulp-px2rem-plugin2';
 
 const autoprefixerOption = {
@@ -24,7 +23,6 @@ const autoprefixerOption = {
     remove: true //是否去掉不必要的前缀 默认：true 
 }
 
-//移动端
 const px2remOption = {
     width_design: 750,//设计稿宽度。默认值640
     valid_num: 2,//生成rem后的小数位数。默认值4
@@ -46,13 +44,13 @@ const imageOption = {
 
 //less
 const targetLessArrPath = "./src/less/**/*.{css,less}";
-const desLessPath = "./dist/css";
+const desLessPath = "./dist/less";
 const desRevLessPath = "./rev/less";
 const desRevCssImagesPath = "./rev/cssMd5Images";
 
 //packageCss
-const targetPackageCssArrPath = "./src/packages/**/*.{css,min.css}";
-const desPackageCssPath = "./dist/packages";
+const targetPackageCssArrPath = "./src/package/**/*.{css,min.css}";
+const desPackageCssPath = "./dist/package";
 const desRevPackageCssPath = "./rev/packageCss";
 
 //es6Js
@@ -62,9 +60,10 @@ const desRevJsPath = "./rev/Es6Js";
 const desRevJsImagesPath = "./rev/JsMd5Images";
 
 //packageJs
-const targetPackageJsArrPath = "./src/packages/**/*.{js,min.js}";
-const desPackageJsPath = "./dist/packages";
+const targetPackageJsArrPath = "./src/package/**/*.{js,min.js}";
+const desPackageJsPath = "./dist/package";
 const desRevPackageJsPath = "./rev/packageJs";
+
 
 //图片
 const targetImagesPath = "./src/images/**/*.{png,jpg,jpeg,gif,ico}";
@@ -81,9 +80,9 @@ const distPath = "./dist/**";
 
 // md5
 const targetMd5ImagesLess = "./rev/cssMd5Images/less/**/*.{css,less}";
-const targetMd5PackageCss = "./rev/cssMd5Images/packages/**/*.{css,min.css}";
+const targetMd5PackageCss = "./rev/cssMd5Images/package/**/*.{css,min.css}";
 const targetMd5ImagesEs6Js = "./rev/JsMd5Images/js/**/*.js";
-const targetMd5ImagesPackageJs = "./rev/JsMd5Images/packages/**/*.{js,min.js}";
+const targetMd5ImagesPackageJs = "./rev/JsMd5Images/package/**/*.{js,min.js}";
 
 gulp.task('clean-dist', (cb) => {
     return del([distPath], cb);
@@ -93,16 +92,34 @@ gulp.task('clean-rev', (cb) => {
     return del([revPath], cb);
 });
 
+// 移动config.js
+gulp.task(('removeConfigJs-dev'), () => {
+    gulp.src('./src/config.js')
+        // .pipe(uglify())
+        .pipe(gulp.dest('./dist/'))
+        .pipe(browsersync.stream())
+});
+
+gulp.task(('removeConfigJs-rel'), (cb) => {
+    gulp.src('./src/config.js')
+        // .pipe(uglify())
+        .pipe(rev())
+        .pipe(gulp.dest('./dist'))
+        .pipe(rev.manifest())
+        .pipe(gulp.dest('./rev'))
+        .on('end', cb);
+})
+
+
 //操作packageJs文件
 gulp.task('packageJs-rel', (cb) => {
     gulp.src(targetMd5ImagesPackageJs)            //需要操作的源文件
-        .pipe(uglify()) //压缩js文件  不能放前面
+        .pipe(uglify()) //压缩js文件 
         .pipe(rev())
         .pipe(gulp.dest(desPackageJsPath))   //把操作好的文件放到dist/js目录下
         .pipe(rev.manifest())
         .pipe(gulp.dest(desRevPackageJsPath))
         .on('end', cb);
-
 });
 
 gulp.task('packageJs-dev', () => {
@@ -118,7 +135,7 @@ gulp.task('Es6Js-rel', (cb) => {
         .pipe(babel({ //靠这个插件编译
             presets: ['env']
         }))
-        .pipe(uglify()) //压缩js文件  不能放前面
+        .pipe(uglify()) //压缩js文件 
         .pipe(rev()) //给文件设置hash
         .pipe(gulp.dest(desJsPath))   //把操作好的文件放到dist/js目录下
         .pipe(rev.manifest()) //生成原始文件和新的hash文件对应关系的json文件
@@ -266,17 +283,15 @@ gulp.task('serve', () => {
 
 
 
-gulp.task('dev', gulpSequence('clean-dist', ['less-dev', 'packageCss-dev', 'Es6Js-dev', 'packageJs-dev', 'image-dev', 'html-dev'], 'watch', 'serve'));
+gulp.task('dev', gulpSequence('clean-dist', ['less-dev', 'packageCss-dev', 'Es6Js-dev', 'packageJs-dev', 'removeConfigJs-dev', 'image-dev', 'html-dev'], 'watch', 'serve'));
 
-gulp.task('build-rel', gulpSequence('clean-dist', 'image-rel', 'rev-image-css', 'rev-image-js', ['less-rel', 'packageCss-rel', 'Es6Js-rel', 'packageJs-rel', 'html-rel'], 'rev', 'clean-rev'));
+gulp.task('preview-rel', gulpSequence('clean-dist', 'image-rel', 'rev-image-css', 'rev-image-js', ['less-rel', 'packageCss-rel', 'Es6Js-rel', 'packageJs-rel', 'removeConfigJs-rel', 'html-rel'], 'rev', 'clean-rev', 'serve'));
 
-gulp.task('rel-preview', gulpSequence('clean-dist', 'image-rel', 'rev-image-css', 'rev-image-js', ['less-rel', 'packageCss-rel', 'Es6Js-rel', 'packageJs-rel', 'html-rel'], 'rev', 'clean-rev', 'serve'));
+gulp.task('build-rel', gulpSequence('clean-dist', 'image-rel', 'rev-image-css', 'rev-image-js', ['less-rel', 'packageCss-rel', 'Es6Js-rel', 'packageJs-rel', 'removeConfigJs-rel', 'html-rel'], 'rev', 'clean-rev'));
 
 //开发
 gulp.task('default', ['dev']);
 //生产预览
-gulp.task('rel', ['rel-preview']);
+gulp.task('pre', ['preview-rel']);
 //生产
 gulp.task('build', ['build-rel']);
-
-gulp.task('web', ['serve']);
