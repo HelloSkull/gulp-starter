@@ -1,4 +1,10 @@
-# gulp-starter
+# gulp-starter [![NPM version](https://badge.fury.io/js/gulp-starter.svg)](https://npmjs.org/package/gulp-starter) [![Build Status](https://travis-ci.org/caozihao/gulp-starter.svg?branch=master)](https://travis-ci.org/caozihao/gulp-starter)
+
+> gulp脚手架
+
+
+##  introduce
+
 1，热加载（代码改动后浏览器自动刷新，解放F5）<br>
 2，监听文件，代码实时变化，实时编译<br>
 3，自动压缩混淆代码，压缩图片<br>
@@ -9,10 +15,15 @@
 8，自动为适配浏览器添加css3前缀<br>
 9，用fetch来进行数据传输，已兼容UC浏览器
 
-# 必须按照该项目的结构目录
 
-# 使用方式
-  
+## Installation
+
+```sh
+$ npm install --save gulp-starter
+```
+
+##  mode
+
 1.  开发模式
 
         npm start
@@ -27,3 +38,13 @@
 
 
 
+## Usage
+
+```js
+var gulpStarter = require('gulp-starter');
+gulpStarter();
+```
+
+## License
+
+ISC © [caozihao]()
